@@ -897,6 +897,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CustomGravity
   rb: {fileID: 2145017544}
   gravityScale: 3
+  DelayBetweenFlips: 2000
+  DelayWhenFlipping: 100
 --- !u!1001 &6439551208653863478
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -916,6 +918,10 @@ PrefabInstance:
     - target: {fileID: 406237755699474354, guid: 616b806575f1d434c8745a68491e2080, type: 3}
       propertyPath: yAxis
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 23026629149268030, guid: 616b806575f1d434c8745a68491e2080, type: 3}
+      propertyPath: m_RequiresDepthTextureOption
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 406237755699474354, guid: 616b806575f1d434c8745a68491e2080, type: 3}
       propertyPath: player
