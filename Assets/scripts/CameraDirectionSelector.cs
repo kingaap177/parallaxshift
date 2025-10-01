@@ -6,7 +6,7 @@ public class CameraDirectionSelector : MonoBehaviour
     public Camera EastCamera;
     public Camera SouthCamera;
     public Camera WestCamera;
-    private int currentCamera = 0;
+    public int currentCamera = 0;
     private int rotationAngle = 0;
 
     void DisableAllCameras()
