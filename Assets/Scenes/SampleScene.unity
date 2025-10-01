@@ -745,7 +745,7 @@ Transform:
   m_GameObject: {fileID: 1767446351}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5, y: -0, z: 2}
+  m_LocalPosition: {x: 5, y: 0.5, z: 2}
   m_LocalScale: {x: 3.9202588, y: 1, z: 1.3694482}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -815,7 +815,7 @@ MonoBehaviour:
   SouthCamera: {fileID: 1514921714}
   WestCamera: {fileID: 485877570}
   currentCamera: 0
-  DelayBetweenFlips: 1000
+  DelayBetweenFlips: 500
 --- !u!114 &2145017543
 MonoBehaviour:
   m_ObjectHideFlags: 0
