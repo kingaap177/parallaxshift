@@ -78,7 +78,7 @@ public class CameraDirectionSelector : MonoBehaviour
         SetCameraDirection();
     }
 
-    void rotatePlayer(int rotationAmount)
+    async Task RotatePlayer(int rotationAmount)
     {
         rotationAngle = Mathf.RoundToInt(transform.rotation.eulerAngles.y) + rotationAmount;
 
@@ -91,7 +91,11 @@ public class CameraDirectionSelector : MonoBehaviour
             rotationAngle += 360;
         }
 
+        await DelayBetweenswitchingCameras();
+
         transform.rotation = Quaternion.Euler(0, rotationAngle, 0);
+
+        await DelayBetweenswitchingCameras();
     }
 
     void Update()
@@ -107,7 +111,7 @@ public class CameraDirectionSelector : MonoBehaviour
             }
             SetCameraDirection();
 
-            rotatePlayer(90);
+            RotatePlayer(90);
         }
 
         if (Input.GetKeyDown(KeyCode.E))
@@ -119,28 +123,12 @@ public class CameraDirectionSelector : MonoBehaviour
             }
             SetCameraDirection();
 
-            rotatePlayer(-90);
+            RotatePlayer(-90);
         }
     }
 
     async Task DelayBetweenswitchingCameras()
     {
         await Task.Delay(DelayBetweenFlips / 2);
-    }
-
-    async Task RotateCameraAsync(int rotationDelta)
-    {
-        isRotating = true;
-
-        SetCameraDirection();
-
-        await DelayBetweenswitchingCameras();
-
-        rotationAngle += rotationDelta;
-        RotatePlayer();
-
-        await DelayBetweenswitchingCameras();
-
-        isRotating = false;
     }
 }

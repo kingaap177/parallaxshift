@@ -1072,7 +1072,7 @@ MonoBehaviour:
   WestCamera: {fileID: 485877570}
   currentCamera: 0
   BlurImage: {fileID: 1471731234}
-  DelayBetweenFlips: 500
+  DelayBetweenFlips: 1000
 --- !u!114 &2145017543
 MonoBehaviour:
   m_ObjectHideFlags: 0
