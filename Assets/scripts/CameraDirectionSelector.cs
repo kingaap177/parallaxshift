@@ -1,8 +1,15 @@
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
+using Unified.UniversalBlur.Runtime;
+using System.Collections;
 
 public class CameraDirectionSelector : MonoBehaviour
 {
+    private UniversalRenderPipelineAsset urpAsset;
+
     public Camera NorthCamera;
     public Camera EastCamera;
     public Camera SouthCamera;
@@ -10,8 +17,12 @@ public class CameraDirectionSelector : MonoBehaviour
     public int currentCamera = 0;
     private int rotationAngle = 0;
 
+    private int currentRotation = 0;
+
+    public UnityEngine.UI.Image BlurImage; // Add this field to reference the BlurImage
+
     public int DelayBetweenFlips = 2000;
-    private int FlipTimer = 0;
+    //private int FlipTimer = 0;
 
     private int rotationDegreePerFlip = 90;
 
@@ -25,27 +36,41 @@ public class CameraDirectionSelector : MonoBehaviour
         WestCamera.enabled = false;
     }
 
-    void SetCameraDirection()
+    void SetBlurImageActive(bool isActive)
     {
+        if (BlurImage != null)
+        {
+            BlurImage.gameObject.SetActive(isActive);
+        }
+    }
+
+    async Task SetCameraDirection()
+    {
+        SetBlurImageActive(true);
+
+        await DelayBetweenswitchingCameras();
+
+        DisableAllCameras();
+
         switch (currentCamera)
         {
             case 0:
-                DisableAllCameras();
-                NorthCamera.enabled = true;
+                NorthCamera.enabled = true; 
                 break;
             case 1:
-                DisableAllCameras();
                 EastCamera.enabled = true;
                 break;
             case 2:
-                DisableAllCameras();
                 SouthCamera.enabled = true;
                 break;
             case 3:
-                DisableAllCameras();
                 WestCamera.enabled = true;
                 break;
         }
+
+        await DelayBetweenswitchingCameras();
+
+        SetBlurImageActive(false);
     }
 
     void Start()
@@ -86,12 +111,7 @@ public class CameraDirectionSelector : MonoBehaviour
 
     async Task DelayBetweenswitchingCameras()
     {
-        while (FlipTimer < DelayBetweenFlips)
-        {
-            FlipTimer += 100;
-            await Task.Delay(100);
-        }
-        FlipTimer = 0;
+        await Task.Delay(DelayBetweenFlips / 2);
     }
 
     async Task RotateCameraAsync(int rotationDelta)
@@ -99,6 +119,8 @@ public class CameraDirectionSelector : MonoBehaviour
         isRotating = true;
 
         SetCameraDirection();
+
+        await DelayBetweenswitchingCameras();
 
         rotationAngle += rotationDelta;
         RotatePlayer();

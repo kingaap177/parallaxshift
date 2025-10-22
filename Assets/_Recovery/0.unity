@@ -749,12 +749,12 @@ GameObject:
   - component: {fileID: 1471731235}
   - component: {fileID: 1471731234}
   m_Layer: 5
-  m_Name: BlurImage
+  m_Name: UIBlurImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1471731233
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1033,7 +1033,7 @@ GameObject:
   - component: {fileID: 2145017546}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1071,7 +1071,6 @@ MonoBehaviour:
   SouthCamera: {fileID: 1514921714}
   WestCamera: {fileID: 485877570}
   currentCamera: 0
-  BlurImage: {fileID: 1471731234}
   DelayBetweenFlips: 500
 --- !u!114 &2145017543
 MonoBehaviour:
