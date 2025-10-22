@@ -11,11 +11,12 @@ public class PlayerMovement : MonoBehaviour
 
     public float moveSpeed = 3.5f;
     public float jumpForce = 10f;
-    public float groundCheckDistance;
+    public float groundCheckDistance = 0.3f;
     private bool isGrounded;
     public LayerMask whatIsGround;
 
     private float xInput;
+    private Vector3 moveDirection = Vector3.zero;
 
     private int CurrentDirection
     {
@@ -24,25 +25,32 @@ public class PlayerMovement : MonoBehaviour
 
     private bool facingRight = true;
 
+    private CameraDirectionSelector cameraSelector;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
+        cameraSelector = GetComponent<CameraDirectionSelector>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         CollissionHandler();
         InputHandler();
-        MovementHandler();
         AnimationHandler();
         FlipHandler();
     }
 
+    private void FixedUpdate()
+    {
+        MovementHandler();
+    }
+
     private void AnimationHandler()
     {
-        anim.SetFloat("xVelocity", rb.linearVelocity.x);
+        Vector3 localVelocity = transform.InverseTransformDirection(rb.linearVelocity);
+        anim.SetFloat("xVelocity", localVelocity.x);
         anim.SetBool("isGrounded", isGrounded);
         anim.SetFloat("yVelocity", rb.linearVelocity.y);
     }
@@ -52,68 +60,62 @@ public class PlayerMovement : MonoBehaviour
         xInput = Input.GetAxisRaw("Horizontal");
 
         if (Input.GetKeyDown(KeyCode.Space))
-        {
             Jump();
-        }
     }
 
-    void MovementHandler()
+    private void MovementHandler()
     {
-        Vector3 moveDir = Vector3.zero;
+        Transform activeCam = GetActiveCameraTransform();
+        if (activeCam == null)
+            return;
 
-        switch (CurrentDirection)
-        {
-            case 0: // North
-                moveDir = new Vector3(xInput, 0, 0);
-                break;
-            case 1: // East
-                moveDir = new Vector3(0, 0, -xInput);
-                break;
-            case 2: // South
-                moveDir = new Vector3(-xInput, 0, 0);
-                break;
-            case 3: // West
-                moveDir = new Vector3(0, 0, xInput);
-                break;
-        }
+        Vector3 cameraRight = activeCam.right;
+        cameraRight.y = 0f;
+        cameraRight.Normalize();
 
-        moveDir = moveDir.normalized * moveSpeed;
+        moveDirection = cameraRight * xInput * moveSpeed;
 
-        rb.linearVelocity = new Vector3(moveDir.x, rb.linearVelocity.y, moveDir.z);
+        Vector3 velocity = new Vector3(moveDirection.x, rb.linearVelocity.y, moveDirection.z);
+        rb.linearVelocity = velocity;
     }
 
-    void Jump()
+    private Transform GetActiveCameraTransform()
     {
-        if (isGrounded)
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);   
-        }
+        if (cameraSelector.NorthCamera.enabled) return cameraSelector.NorthCamera.transform;
+        if (cameraSelector.EastCamera.enabled) return cameraSelector.EastCamera.transform;
+        if (cameraSelector.SouthCamera.enabled) return cameraSelector.SouthCamera.transform;
+        if (cameraSelector.WestCamera.enabled) return cameraSelector.WestCamera.transform;
+        return null;
     }
 
-    void CollissionHandler()
+    private void Jump()
     {
-        isGrounded = Physics.Raycast(transform.position, Vector2.down, groundCheckDistance, whatIsGround);
+        if (!isGrounded) return;
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
     }
 
-    void OnDrawGizmos()
+    private void CollissionHandler()
     {
-        Gizmos.DrawLine(transform.position, transform.position + new Vector3(0, -groundCheckDistance));
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, whatIsGround);
     }
 
-    void FlipHandler()
+    private void OnDrawGizmos()
     {
-        if (rb.linearVelocity.x > 0 && facingRight == false)
-        {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.down * groundCheckDistance);
+    }
+
+    private void FlipHandler()
+    {
+        if (xInput > 0 && !facingRight)
             Flip();
-        }
-        else if (rb.linearVelocity.x < 0 && facingRight == true)
-        {
+        else if (xInput < 0 && facingRight)
             Flip();
-        }
     }
-    void Flip()
+
+    private void Flip()
     {
-        transform.Rotate(0, 180, 0);
+        transform.Rotate(0f, 180f, 0f);
         facingRight = !facingRight;
     }
 }

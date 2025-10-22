@@ -78,8 +78,10 @@ public class CameraDirectionSelector : MonoBehaviour
         SetCameraDirection();
     }
 
-    void RotatePlayer()
+    void rotatePlayer(int rotationAmount)
     {
+        rotationAngle = Mathf.RoundToInt(transform.rotation.eulerAngles.y) + rotationAmount;
+
         if (rotationAngle >= 360)
         {
             rotationAngle -= 360;
@@ -98,14 +100,26 @@ public class CameraDirectionSelector : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            currentCamera = (currentCamera + 1) % 4;
-            _ = RotateCameraAsync(-rotationDegreePerFlip);
+            currentCamera = currentCamera + 1;
+            if (currentCamera > 3)
+            {
+                currentCamera = 0;
+            }
+            SetCameraDirection();
+
+            rotatePlayer(90);
         }
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            currentCamera = (currentCamera - 1 + 4) % 4;
-            _ = RotateCameraAsync(rotationDegreePerFlip);
+            currentCamera = currentCamera - 1;
+            if (currentCamera < 0)
+            {
+                currentCamera = 3;
+            }
+            SetCameraDirection();
+
+            rotatePlayer(-90);
         }
     }
 
