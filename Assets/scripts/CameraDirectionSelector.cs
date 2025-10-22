@@ -75,7 +75,9 @@ public class CameraDirectionSelector : MonoBehaviour
 
     void Start()
     {
-        SetCameraDirection();
+        DisableAllCameras();
+        NorthCamera.enabled = true;
+        transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
     async Task RotatePlayer(int rotationAmount)
