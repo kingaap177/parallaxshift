@@ -1,10 +1,14 @@
-using System;
+﻿using System;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public CameraDirectionSelector CameraDirectionSelector;
+
     private Animator anim;
+
     public Rigidbody rb;
+
     public float moveSpeed = 3.5f;
     public float jumpForce = 10f;
     public float groundCheckDistance = 0.3f;
@@ -13,6 +17,11 @@ public class PlayerMovement : MonoBehaviour
 
     private float xInput;
     private Vector3 moveDirection = Vector3.zero;
+
+    private int CurrentDirection
+    {
+        get { return CameraDirectionSelector.currentCamera; }
+    }
 
     private bool facingRight = true;
 
