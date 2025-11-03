@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.InputSystem.Controls;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -17,6 +18,9 @@ public class PlayerMovement : MonoBehaviour
 
     private float xInput;
     private Vector3 moveDirection = Vector3.zero;
+
+    public float coyoteTime = 0.2f;
+    public float coyoteCounter;
 
     private int CurrentDirection
     {
@@ -40,6 +44,15 @@ public class PlayerMovement : MonoBehaviour
         InputHandler();
         AnimationHandler();
         FlipHandler();
+
+        if (isGrounded)
+        {
+            coyoteCounter = coyoteTime;
+        }
+        else
+        {
+            coyoteCounter -= Time.deltaTime;
+        }
     }
 
     private void FixedUpdate()
@@ -90,8 +103,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
-        if (!isGrounded) return;
-        rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
+        if (coyoteCounter < 0f) return;
+        {
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
+            coyoteCounter = 0f;
+        }
     }
 
     private void CollissionHandler()
