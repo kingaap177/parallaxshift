@@ -1,4 +1,5 @@
 ﻿using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -6,7 +7,8 @@ public class PlayerMovement : MonoBehaviour
     public CameraDirectionSelector CameraDirectionSelector;
 
     private Animator anim;
-
+    public AudioSource footsteps;
+    public AudioSource jumpSound;
     public Rigidbody rb;
 
     public float moveSpeed = 3.5f;
@@ -53,14 +55,30 @@ public class PlayerMovement : MonoBehaviour
         anim.SetFloat("xVelocity", localVelocity.x);
         anim.SetBool("isGrounded", isGrounded);
         anim.SetFloat("yVelocity", rb.linearVelocity.y);
+
     }
 
     private void InputHandler()
     {
         xInput = Input.GetAxisRaw("Horizontal");
+        if (xInput > 0)
+        {
+            footsteps.enabled = true;
+        }
+        else if (xInput < 0)
+        {
+            footsteps.enabled = true;
+        }
+        else
+        {
+            footsteps.enabled = false;
+        }
 
         if (Input.GetKeyDown(KeyCode.Space))
+        {
             Jump();
+            jumpSound.enabled = true;
+        }
     }
 
     private void MovementHandler()
@@ -77,6 +95,7 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 velocity = new Vector3(moveDirection.x, rb.linearVelocity.y, moveDirection.z);
         rb.linearVelocity = velocity;
+        
     }
 
     private Transform GetActiveCameraTransform()
@@ -90,7 +109,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
-        if (!isGrounded) return;
+        if (!isGrounded) return; 
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
     }
 
