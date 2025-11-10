@@ -61,25 +61,31 @@ public class PlayerMovement : MonoBehaviour
     private void InputHandler()
     {
         xInput = Input.GetAxisRaw("Horizontal");
-        if (xInput > 0)
-        {
-            footsteps.enabled = true;
-        }
-        else if (xInput < 0)
-        {
-            footsteps.enabled = true;
-        }
-        else
-        {
-            footsteps.enabled = false;
-        }
+
+        HandleFootstepSound();
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Jump();
-            jumpSound.enabled = true;
         }
     }
+
+        private void HandleFootstepSound()
+    {
+        bool isWalking = Mathf.Abs(xInput) > 0.1f && isGrounded;
+
+        if (isWalking)
+        {
+            if (!footsteps.isPlaying)
+                footsteps.Play();
+        }
+        else
+        {
+            if (footsteps.isPlaying)
+                footsteps.Stop();
+        }
+    }
+
 
     private void MovementHandler()
     {
@@ -95,7 +101,7 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 velocity = new Vector3(moveDirection.x, rb.linearVelocity.y, moveDirection.z);
         rb.linearVelocity = velocity;
-        
+
     }
 
     private Transform GetActiveCameraTransform()
@@ -109,9 +115,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
-        if (!isGrounded) return; 
+        if (!isGrounded) return;
+
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
+        jumpSound.Play();
     }
+
 
     private void CollissionHandler()
     {
