@@ -24,6 +24,8 @@ public class PlayerMovement : MonoBehaviour
     public float coyoteTime = 0.2f;
     public float coyoteCounter;
 
+    private bool isTransitioning = false;
+
     private int CurrentDirection
     {
         get { return CameraDirectionSelector.currentCamera; }
@@ -43,6 +45,11 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         CollissionHandler();
+
+        isTransitioning = cameraSelector.isTransitioning;
+        if (isTransitioning)
+            return;
+
         InputHandler();
         AnimationHandler();
         FlipHandler();
@@ -83,7 +90,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-        private void HandleFootstepSound()
+    private void HandleFootstepSound()
     {
         bool isWalking = Mathf.Abs(xInput) > 0.1f && isGrounded;
 
@@ -119,10 +126,7 @@ public class PlayerMovement : MonoBehaviour
 
     private Transform GetActiveCameraTransform()
     {
-        if (cameraSelector.NorthCamera.enabled) return cameraSelector.NorthCamera.transform;
-        if (cameraSelector.EastCamera.enabled) return cameraSelector.EastCamera.transform;
-        if (cameraSelector.SouthCamera.enabled) return cameraSelector.SouthCamera.transform;
-        if (cameraSelector.WestCamera.enabled) return cameraSelector.WestCamera.transform;
+        if (cameraSelector.MainCamera.enabled) return cameraSelector.MainCamera.transform;
         return null;
     }
 

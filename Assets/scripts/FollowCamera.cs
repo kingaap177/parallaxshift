@@ -5,7 +5,8 @@ public class FollowCamera : MonoBehaviour
     public GameObject player;
     public float xAxis, yAxis, zAxis;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public float distanceFromPlayer = 5.0f;
+
     void Start()
     {
         
