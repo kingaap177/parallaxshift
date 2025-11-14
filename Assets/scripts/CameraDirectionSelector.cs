@@ -62,6 +62,13 @@ public class CameraDirectionSelector : MonoBehaviour
     {
         cameraFollowPlayer();
 
+        float xInput = Input.GetAxisRaw("Horizontal");
+
+        if (Input.GetKeyDown(KeyCode.Space) || xInput != 0)
+        {
+            return;
+        }
+
         if (isTransitioning) return;
 
         if (Input.GetKeyDown(KeyCode.Q))
